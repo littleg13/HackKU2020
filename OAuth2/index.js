@@ -2,7 +2,6 @@ const http = require('http');
 const fs   = require('fs');
 const port = 53134;
 
-
 //Takes request and response
 //These are Node.js events (of http.Server)
 
@@ -20,11 +19,9 @@ const requestListener = function (request, response) {
     response.writeHead(responseCode, {
 		'content-type': 'text/html;charset=utf-8',
     });
-    
     response.write(content);
 	response.end();
 }
-
 
 const server = http.createServer(requestListener)
 server.listen(port);
