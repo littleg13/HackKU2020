@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>OAuth2</title>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="Mooxter">
+	<meta name="author" content="Nick, Grady, Cameron, Eric">
 </head>
 <body>
-	<div id="info">
-		Hoi!
-	</div>
-	<a id="login" style="display: none;" href="http://mooxter.com">Attempt Again?</a>
+	<h1 class="cover-heading">Welcome Back :)</h1>
+	<img id="user_avatar" src="">
 	<script>
 		window.onload = () => {
             //Get everything after the '#' in the URL
@@ -18,7 +21,8 @@
 				const accessToken = fragment.get("access_token");
 				const tokenType   = fragment.get("token_type");
 
-                //Using the 'identity' scope on discord
+				//Using the 'identity' scope on discord
+				//This returns a User Object!!
 				fetch('https://discordapp.com/api/users/@me', {
 					headers: {
 						authorization: `${tokenType} ${accessToken}`
@@ -26,8 +30,9 @@
 				})
 					.then(res => res.json())
 					.then(response => {
-						const { username, discriminator } = response;
-						document.getElementById('info').innerText += ` ${username}#${discriminator}`;
+						const { username, discriminator, avatar, id } = response;
+						document.getElementById('user_avatar').src = 'https://cdn.discordapp.com/avatars/' + id + '/' + avatar + '.jpg';
+						console.log(username);
 					})
 					.catch(console.error);
 			}
