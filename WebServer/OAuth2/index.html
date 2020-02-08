@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OAuth2</title>
+</head>
+<body>
+	<a id="login" style="display: none;" href="http://mooxter.com">Attempt Again?</a>
+	<script>
+		window.onload = () => {
+            //Get everything after the '#' in the URL
+			const fragment = new URLSearchParams(window.location.hash.slice(1));
+
+            //access_token and token_type are mandatory to discords OAuth2
+			if (fragment.has("access_token")) {
+				const accessToken = fragment.get("access_token");
+				const tokenType   = fragment.get("token_type");
+
+
+                //Using the 'identity' scope on discord
+				fetch('https://discordapp.com/api/users/@me', {
+					headers: {
+						authorization: `${tokenType} ${accessToken}`
+					}
+				})
+					.then(res => res.json())
+					.then(response => {
+						const { id, username, discriminator } = response;
+						document.getElementById('info').innerText += ` ${id}#${username}#${discriminator}`;
+					})
+					.catch(console.error);
+			}
+			else {
+				document.getElementById('login').style.display = 'block';
+			}
+		}
+	</script>
+</body>
+</html>
