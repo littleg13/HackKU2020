@@ -1,0 +1,23 @@
+body {
+    background-color: seagreen;
+}
+
+
+
+h1 {
+    text-align: center;
+}
+
+.main {
+    text-align: center;
+    width: 500px;
+    height: 300px;
+    margin: auto;
+    /* background-color: #F6D55C; */
+    border: 2px solid black;
+    border-radius: 20px;
+}
+
+.login_signup {
+    text-align: center;
+}
