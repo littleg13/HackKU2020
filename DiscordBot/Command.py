@@ -27,7 +27,7 @@ class InvalidMooxterUser(Exception):
         super(InvalidMooxterUser, self).__init__(self, user)
 
     def __str__(self):
-        return 'User %s does not have a Mooxster account linked to their discord account. Visit wwww.Mooxter.com to link your discord account.' % self.user
+        return 'User %s does not have a Mooxter account linked to their discord account. Visit wwww.Mooxter.com to link your discord account.' % self.user
 
 class Command():
     def __init__(self, name, callback, addArguments):
