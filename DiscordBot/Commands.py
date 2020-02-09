@@ -4,13 +4,7 @@ import requests
 import mysql.connector
 API = 'xpringapi'
 
-database = mysql.connector.connect(
-    host="mysql",
-    user="root",
-    passwd="password",
-    database="mooxter"
-)
-cursor = database.cursor()
+
 
 
 class InternalServerError(Exception):
@@ -55,6 +49,25 @@ def GetBalance(client, user):
     return (False, None)
 
 def GetHistory(client, user):
+    UID = getUID(user)
+    response = requests.get(API + '/api/v1/getBalance', params={'id': UID})
+    data = response.json()
+    toPrint = "'''Transaction History:\n"
+    if(response.status_code == 200):
+        if(data['success'] == 'false'):
+            toPrint += 'No Entries.\n'
+        else:
+            count = 1
+            toPrint += '#   FROM    TO    AMOUNT    HASH\n'
+            for entry in data['result'][-5:]:
+                toPrint += '%d: %s  %s  %s  %s\n' % (count, entry['fromID'], entry['toID'], entry['amount'], entry['hash'])
+                count += 1
+        toPrint += "'''"
+        return (True, toPrint)
+    elif(response.status_code == 400):
+        return (True, 'Failed to get transaction history. Request not properly formatted')
+    else:
+        raise InternalServerError('500')
     return (False, None)
 
 def Help(client, user):
@@ -76,9 +89,17 @@ def VerifyUser(client, user):
     return user
 
 def getUID(user):
+    database = mysql.connector.connect(
+        host="mysql",
+        user="root",
+        passwd="password",
+        database="mooxter"
+    )
+    cursor = database.cursor()
     query = "SELECT uid FROM users WHERE discord_uid=%s" % user.id
     cursor.execute(query)
     result = cursor.fetchall()
+    database.close()
     if(len(result) != 1):
         raise InvalidMooxterUser(user.name)
     return result[0]['uid']
