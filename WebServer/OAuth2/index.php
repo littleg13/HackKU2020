@@ -27,7 +27,7 @@ if (isset($_GET['username']) && isset($_GET['avatar']) && isset($_GET['id'])) {
 
     $uid = uniqid();
     $_SESSION['UID'] = $uid;
-    $sql = "SELECT discord_uid FROM users";
+    $sql = "SELECT discord_uid FROM users WHERE discord_uid = '$id'";
     $result = $conn->query($sql);
 
     if($result->num_rows < 1) {

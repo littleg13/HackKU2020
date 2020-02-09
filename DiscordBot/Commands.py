@@ -32,25 +32,25 @@ def Send(client, user, destination, amount):
     elif(response.status_code == 400):
         return (True, 'Failed to send %s to %s. Request not properly formatted' % (amount, dstUser.name))
     else:
-        raise InternalServerError('500')
+        raise InternalServerError(response.text)
     return (False, None)
     
 
 def GetBalance(client, user):
     UID = getUID(user)
-    response = requests.get(API + '/api/v1/getBalance', params={'id': UID})
+    response = requests.get(API + '/api/v1/getBalance/' + UID)
     data = response.text
     if(response.status_code == 200):
         return (True, 'Balance: %s' % (data))
     elif(response.status_code == 400):
         return (True, 'Failed to get balance. Request not properly formatted')
     else:
-        raise InternalServerError('500')
+        raise InternalServerError(response.text)
     return (False, None)
 
 def GetHistory(client, user):
     UID = getUID(user)
-    response = requests.get(API + '/api/v1/tranactionHistory', params={'id': UID})
+    response = requests.get(API + '/api/v1/tranactionHistory' + UID)
     data = response.text
     toPrint = "'''Transaction History:\n"
     if(response.status_code == 200):
@@ -68,7 +68,7 @@ def GetHistory(client, user):
     elif(response.status_code == 400):
         return (True, 'Failed to get transaction history. Request not properly formatted')
     else:
-        raise InternalServerError('500')
+        raise InternalServerError(response.text)
     return (False, None)
 
 def Help(client, user):
