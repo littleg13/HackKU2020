@@ -2,6 +2,7 @@ from Command import Command, InvalidDiscordUser, InvalidMooxterUser
 from DiscordClient import DiscordClient
 import requests
 import mysql.connector
+import json 
 API = 'http://xpringapi:5000'
 
 
@@ -26,9 +27,10 @@ def Send(client, user, destination, amount):
         return (True, 'The amount needs to be specified as a number.')
     sUID = getUID(user)
     dUID = getUID(dstUser)
-    response = requests.post(API + '/api/v1/send', data={'sUID': sUID, 'dUID': dUID, 'amount': amount})
+    response = requests.post(API + '/api/v1/send', data={'sUID': sUID, 'dUID': dUID, 'amount': str(amount)})
+    return (True, str(response))
     if(response.status_code == 200):
-        return (True, 'Successfully sent %s to %s.' % (amount, dstUser.name))
+        return (True, 'Successfully sent %d to %s.' % (amount, dstUser.name))
     elif(response.status_code == 400):
         return (True, 'Failed to send %s to %s. Request not properly formatted' % (amount, dstUser.name))
     else:
@@ -39,9 +41,11 @@ def Send(client, user, destination, amount):
 def GetBalance(client, user):
     UID = getUID(user)
     response = requests.get(API + '/api/v1/balance/' + UID)
-    data = response.text
+    data =  json.loads(response.text)
     if(response.status_code == 200):
-        return (True, 'Balance: %s' % (data))
+        if('balance' in data):
+            return (True, 'Balance: 0')
+        return (True, 'Balance: %s' % (data['balance']))
     elif(response.status_code == 400):
         return (True, 'Failed to get balance. Request not properly formatted')
     else:
@@ -51,15 +55,14 @@ def GetBalance(client, user):
 def GetHistory(client, user):
     UID = getUID(user)
     response = requests.get(API + '/api/v1/transactionHistory/' + UID)
-    data = response.text
+    data = json.loads(response.text)
     toPrint = "'''Transaction History:\n"
     if(response.status_code == 200):
-        if(data == 'false'):
+        if(data['success'] == 'false'):
             toPrint += 'No Entries.\n'
         else:
             count = 1
             toPrint += '#   FROM    TO    AMOUNT    HASH\n'
-            return (True, data)
             for entry in data['result'][-5:]:
                 toPrint += '%d: %s  %s  %s  %s\n' % (count, entry['fromID'], entry['toID'], entry['amount'], entry['hash'])
                 count += 1
