@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 
 const app = express();
 const PORT = 5000;
+const remoteURL = "grpc.xpring.tech:80"
 
 var mysql = require('mysql');
 // -------- DEV --------
@@ -32,6 +33,7 @@ con.connect(function(err) {
 // });
 
 const { XpringClient, Wallet } = require("xpring-js");
+let client = new XpringClient(remoteURL);
 
 // Parse incoming requests data
 app.use(bodyParser.json());
@@ -125,19 +127,126 @@ app.get('/api/v1/newWallet/:id', (req, res) => {
 });
 
 app.post('/api/v1/send', (req, res) => {
-  
+    if (!('sUID' in req.body) || !('dUID' in req.body) || !('amount' in req.body)) {
+        return res.status(400).send({
+            success: 'false',
+            message: `Incorrect parameters passed`
+        });
+    }
+
+    let destUID = req.body.dUID;
+    let destWalletAdd;
+
+    let query = `SELECT wallet_address FROM users WHERE uid = '${destUID}'`;
+   
+    try {
+        con.query(query, function (err, result) {
+            if (err) throw err;
+            if (result.length != 1) {
+                res.status(400).send({
+                    success: 'false',
+                    message: `Dest uid does not exist`
+                });
+                return;
+            } else {
+                destWalletAdd = result[0].wallet_address;
+                getSendingWallet(res, req, destWalletAdd);
+            }
+        });
+    } catch (err) {
+        response = res.status(500).send({
+            success: 'false',
+            message: `Failed to get dest wallet address, error: ${err}`
+        });
+        return;
+    }
+
+    // if (destWalletAdd == null) {
+    //     return;
+    // }
+
+    // query = `SELECT wallet_secret FROM users WHERE uid = '${sendingUID}'`;
+
+    // try {
+    //     con.query(query, function (err, result) {
+    //         if (err) throw err;
+    //         if (result.length != 1) {
+    //             response = res.status(400).send({
+    //                 success: 'false',
+    //                 message: `Sending uid does not exist`
+    //             });
+    //         } else {
+    //             sendingWalletPrivAdd = result[0].wallet_address;
+    //         }
+    //     });
+    // } catch (err) {
+    //     response = res.status(500).send({
+    //         success: 'false',
+    //         message: `Failed to get dest wallet address, error: ${err}`
+    //     });
+    //     return;
+    // }
+
+    // if (sendingWalletPrivAdd == null) {
+    //     return;
+    // }
 });
 
-app.get('/api/v1/balance:id', (req, res) => {
-  
+app.get('/api/v1/balance/:id', (req, res) => {
+    let query = `SELECT wallet_address FROM users WHERE uid = '${req.params.id}'`;
+
+    try {
+        con.query(query, async function (err, result) {
+            if (err) throw err;
+            if (result.length == 0) {
+                response = res.status(400).send({
+                    success: 'false',
+                    message: `Invalid ID given`
+                });
+                return;
+            }
+            const address = result[0].wallet_address;
+            
+            const balance = await client.getBalance(address).catch((error) => {
+                if (error.details == "Account not found.") {
+                    return 0;
+                } else {
+                    console.log(error);
+                }
+            });
+
+            return res.status(200).send({
+                success: 'true',
+                balance,
+            });
+        });
+    } catch (err) {
+        response = res.status(500).send({
+            success: 'false',
+            message: `Failed to check for pre-existing wallet, error: ${err}`
+        });
+    }
 });
 
 app.get('/api/v1/transactionHistory:id', (req, res) => {
-  
+
 });
 
-app.post('/api/v1/deleteWallet:id', (req, res) => {
-  
+app.post('/api/v1/deleteWallet/:id', (req, res) => {
+  let query = `UPDATE users SET discord_uid='DELETED' WHERE uid='${req.params.id}'`;
+
+  try {
+    con.query(query, function (err, result) {
+        if (err) throw err;
+        response = res.status(200).send();
+    });
+  } catch (err) {
+    response = res.status(500).send({
+        success: 'false',
+        message: `Failed to get dest wallet address, error: ${err}`
+    });
+    return;
+  }
 });
 
 app.listen(PORT, () => {
@@ -164,6 +273,49 @@ function createWallet(res, req) {
             message: `Failed to create wallet, error: ${err}`
         });
     }
+}
+
+async function getSendingWallet(res, req, destWalletAdd) {
+    let sendingUID = req.body.sUID;
+    let amount = BigInt(req.body.amount * Math.pow(10, 6));
+    console.log(amount);
+
+    let query = `SELECT wallet_secret, wallet_public FROM users WHERE uid = '${sendingUID}'`;
+
+    try {
+        con.query(query, function (err, result) {
+            if (err) throw err;
+            console.log(result);
+            if (result.length != 1) {
+                return res.status(400).send({
+                    success: 'false',
+                    message: `Sending uid does not exist`
+                });
+            } else {
+                let sendingWalletPrivAdd = result[0].wallet_secret;
+                let sendingWalletPubAdd = result[0].wallet_public;
+                let sendingWallet = new Wallet(sendingWalletPubAdd, sendingWalletPrivAdd);
+                console.log(sendingWalletPrivAdd);
+                console.log(sendingWalletPubAdd);
+                console.log(sendingWallet);
+                finishSending(res, amount, destWalletAdd, sendingWallet);
+            }
+        });
+    } catch (err) {
+        response = res.status(500).send({
+            success: 'false',
+            message: `Failed to get dest wallet address, error: ${err}`
+        });
+        return;
+    }
+}
+
+async function finishSending(res, amount, destWalletAdd, sendingWallet) {
+    const transactionHash = await client.send(amount, destWalletAdd, sendingWallet);
+    return res.status(200).send({
+        success: 'true',
+        transactionHash,
+    });
 }
 
 // const { XpringClient, Wallet } = require("xpring-js");
