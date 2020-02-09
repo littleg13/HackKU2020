@@ -26,7 +26,7 @@ def Send(client, user, destination, amount):
         return (True, 'The amount needs to be specified as a number.')
     sUID = getUID(user)
     dUID = getUID(dstUser)
-    response = requests.post(API + '/api/v1/send', params={'sUID': sUID, 'dUID': dUID, 'amount': amount})
+    response = requests.post(API + '/api/v1/send', data={'sUID': sUID, 'dUID': dUID, 'amount': amount})
     if(response.status_code == 200):
         return (True, 'Successfully sent %s to %s.' % (amount, dstUser.name))
     elif(response.status_code == 400):
@@ -38,7 +38,7 @@ def Send(client, user, destination, amount):
 
 def GetBalance(client, user):
     UID = getUID(user)
-    response = requests.get(API + '/api/v1/getBalance/' + UID)
+    response = requests.get(API + '/api/v1/balance/' + UID)
     data = response.text
     if(response.status_code == 200):
         return (True, 'Balance: %s' % (data))
@@ -50,7 +50,7 @@ def GetBalance(client, user):
 
 def GetHistory(client, user):
     UID = getUID(user)
-    response = requests.get(API + '/api/v1/tranactionHistory' + UID)
+    response = requests.get(API + '/api/v1/transactionHistory/' + UID)
     data = response.text
     toPrint = "'''Transaction History:\n"
     if(response.status_code == 200):
