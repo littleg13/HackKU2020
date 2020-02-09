@@ -72,22 +72,33 @@ body {
 .cover .btn-lg {
   padding: 10px 20px;
   font-weight: 700;
-  
+}
+
+.mastfoot {
+  color: #999; /* IE8 proofing */
+  color: rgba(255, 255, 255, .5);
 }
 /*
  * Affix and center
  */
 
 @media (min-width: 768px) {
+
+  .mastfoot {
+    position: fixed;
+    bottom: 0;
+  }
   .site-wrapper-inner {
     vertical-align: middle; /* Start the vertical centering */
   }
+  .mastfoot,
   .cover-container {
     width: 100%; /* Must be percentage or pixels for horizontal alignment */
   }
 }
 
 @media (min-width: 992px) {
+  .mastfoot,
   .cover-container {
     width: 700px;
   }
