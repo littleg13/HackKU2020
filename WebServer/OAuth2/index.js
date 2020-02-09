@@ -1,8 +1,10 @@
 const http = require('http');
 const fs   = require('fs');
+const uuidv1 = require('uuid/v1');
 const port = 53134;
 
 console.log("Starting Server on Port " + port);
+console.log("UUID " + uuidv1()); 
 
 //Takes request and response
 //These are Node.js events (of http.Server)
@@ -14,7 +16,7 @@ const requestListener = function (request, response) {
     
     if (request.url === '/') {
 		responseCode = 200;
-		content = fs.readFileSync('./index.html');
+		content = fs.readFileSync('./indexReturn.html');
 	}
 
     //write headers to response stream
