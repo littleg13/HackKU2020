@@ -40,5 +40,5 @@ if (isset($_GET['username']) && isset($_GET['avatar']) && isset($_GET['id'])) {
 }
 
 $conn->close();
-header('Location: /indexReturn.html');
+header('Location: /OAuth2/indexReturn.html');
 ?>
