@@ -41,7 +41,7 @@ def GetBalance(client, user):
     response = requests.get(API + '/api/v1/getBalance', params={'id': UID})
     data = response.json()
     if(response.status_code == 200):
-        return (True, 'Balance: %s' % (response['balance']))
+        return (True, 'Balance: %s' % (data['balance']))
     elif(response.status_code == 400):
         return (True, 'Failed to get balance. Request not properly formatted')
     else:
@@ -102,7 +102,7 @@ def getUID(user):
     database.close()
     if(len(result) != 1):
         raise InvalidMooxterUser(user.name)
-    return result[0]['uid']
+    return result[0][0]
 
 
 #List of commands
