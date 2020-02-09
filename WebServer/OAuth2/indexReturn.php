@@ -31,7 +31,7 @@
               error_reporting(E_ALL);
               session_start();
               $UID = $_SESSION['UID'];
-              $balanceURL = "http://xpringapi/api/v1/getBalance/$UID";
+              $balanceURL = "http://xpringapi/api/v1/balance/$UID";
               $ch = curl_init();
               // set url 
               curl_setopt($ch, CURLOPT_URL, $balanceURL);
