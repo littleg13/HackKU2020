@@ -39,9 +39,9 @@ def Send(client, user, destination, amount):
 def GetBalance(client, user):
     UID = getUID(user)
     response = requests.get(API + '/api/v1/getBalance', params={'id': UID})
-    data = response.json()
+    data = response.text
     if(response.status_code == 200):
-        return (True, 'Balance: %s' % (data['balance']))
+        return (True, 'Balance: %s' % (data))
     elif(response.status_code == 400):
         return (True, 'Failed to get balance. Request not properly formatted')
     else:
@@ -51,14 +51,15 @@ def GetBalance(client, user):
 def GetHistory(client, user):
     UID = getUID(user)
     response = requests.get(API + '/api/v1/tranactionHistory', params={'id': UID})
-    data = response.json()
+    data = response.text
     toPrint = "'''Transaction History:\n"
     if(response.status_code == 200):
-        if(data['success'] == 'false'):
+        if(data == 'false'):
             toPrint += 'No Entries.\n'
         else:
             count = 1
             toPrint += '#   FROM    TO    AMOUNT    HASH\n'
+            return (True, data/
             for entry in data['result'][-5:]:
                 toPrint += '%d: %s  %s  %s  %s\n' % (count, entry['fromID'], entry['toID'], entry['amount'], entry['hash'])
                 count += 1
