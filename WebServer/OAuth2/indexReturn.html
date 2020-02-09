@@ -110,8 +110,6 @@
 		}
 	</style>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-	
-	
 </head>
 <body>
 	<div class="site-wrapper">
@@ -119,7 +117,6 @@
           	<div class="cover-container">
             	<div class="inner cover">
 			  		<h1 class="cover-heading" id="username_id">Welcome back, </h1>
-			
               		<img class="rounded-circle" id="user_avatar" src="">
 				</div>
 				<div class="mastfoot">
@@ -130,10 +127,8 @@
           	</div>
         </div>
     </div>
-	
 	<script>
 		window.onload = () => {
-			
             //Get everything after the '#' in the URL
 			const fragment = new URLSearchParams(window.location.hash.slice(1));
 
@@ -154,10 +149,8 @@
 						const { username, discriminator, avatar, id } = response;
 						document.getElementById('username_id').innerText += ` ${username}`;
 						document.getElementById('user_avatar').src = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpg`;
-						console.log(username);
 					})
 					.catch(console.error);
-
 			}
 			else {
 				document.getElementById('login').style.display = 'block';

@@ -26,11 +26,6 @@ con.connect(function(err) {
     console.log("Connected to database");
 });
 
-// con.query("sql", function (err, result) {
-//     if (err) throw err;
-//     console.log("Result: " + result);
-// });
-
 const { XpringClient, Wallet } = require("xpring-js");
 let client = new XpringClient(remoteURL);
 
