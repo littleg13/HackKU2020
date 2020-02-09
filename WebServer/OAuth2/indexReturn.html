@@ -77,8 +77,7 @@
 		font-weight: 700;
 		}
 		.mastfoot {
-  		color: #999; /* IE8 proofing */
-  		color: rgba(255, 255, 255, .5);
+  		color: #333;
 		}
 
 		.rounded-circle {
@@ -125,7 +124,7 @@
 				</div>
 				<div class="mastfoot">
 					<div class="inner">
-						<p>A Homepage, by Eric Seals</p>
+						<p>Return to <a href="../index.html">Home</a>.</p>
 					</div>
 				</div>
           	</div>
@@ -134,6 +133,7 @@
 
 	<script>
 		window.onload = () => {
+			
             //Get everything after the '#' in the URL
 			const fragment = new URLSearchParams(window.location.hash.slice(1));
 
