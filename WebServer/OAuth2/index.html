@@ -7,10 +7,131 @@
 
     <meta name="description" content="Mooxter">
 	<meta name="author" content="Nick, Grady, Cameron, Eric">
+	
+	<style>
+		/* Links */
+		a,
+		a:focus,
+		a:hover {
+		color: #fff;
+		}
+
+		/* Custom default button */
+		.btn-default,
+		.btn-default:hover,
+		.btn-default:focus {
+		color: #333;
+		text-shadow: none; /* Prevent inheritance from `body` */
+		background-color: #E5E7E9;
+		border: 1px solid #fff;
+		}
+
+		/*
+		* Base structure
+		*/
+
+		html,
+		body {
+		height: 100%;
+		background-color: #333;
+		}
+		body {
+		color: #fff;
+		text-align: center;
+		text-shadow: 0 1px 3px rgba(0, 0, 0, .5);
+		}
+
+		/* Extra markup and styles for table-esque vertical and horizontal centering */
+		.site-wrapper {
+		display: table;
+		width: 100%;
+		height: 100%; /* For at least Firefox */
+		min-height: 100%;
+		-webkit-box-shadow: inset 0 0 100px rgba(0, 0, 0, .5);
+		box-shadow: inset 0 0 100px rgba(0, 0, 0, .5);
+		}
+		.site-wrapper-inner {
+		display: table-cell;
+		vertical-align: top;
+		text-align: center;
+		}
+		.cover-container {
+		margin-right: auto;
+		margin-left: auto;
+		}
+
+		/* Padding for spacing */
+		.inner {
+		padding: 30px;
+		}
+
+		/*
+		* Cover
+		*/
+
+		.cover {
+		padding: 0 20px;
+		}
+		.cover .btn-lg {
+		padding: 10px 20px;
+		font-weight: 700;
+		}
+		.mastfoot {
+  		color: #999; /* IE8 proofing */
+  		color: rgba(255, 255, 255, .5);
+		}
+
+		.rounded-circle {
+			padding: 10px 0px;
+		}
+		/*
+		* Affix and center
+		*/
+
+		@media (min-width: 768px) {
+
+			.mastfoot {
+			position: fixed;
+			bottom: 0;
+			}
+			.site-wrapper-inner {
+			vertical-align: middle; /* Start the vertical centering */
+			}
+			.mastfoot,
+			.cover-container {
+			width: 100%; /* Must be percentage or pixels for horizontal alignment */
+			}
+		}
+
+		@media (min-width: 992px) {
+			.mastfoot,
+			.cover-container {
+			width: 700px;
+			}
+		}
+	</style>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	
+	
 </head>
 <body>
-	<h1 class="cover-heading">Welcome Back :)</h1>
-	<img id="user_avatar" src="">
+	<div class="site-wrapper">
+        <div class="site-wrapper-inner">
+          	<div class="cover-container">
+            	<div class="inner cover">
+			  		<h1 class="cover-heading" id="username_id">Welcome back, </h1>
+			
+              		<img class="rounded-circle" id="user_avatar" src="">
+				</div>
+				<div class="mastfoot">
+					<div class="inner">
+						<p>A Homepage, by Eric Seals</p>
+					</div>
+				</div>
+          	</div>
+        </div>
+    </div>
+
 	<script>
 		window.onload = () => {
             //Get everything after the '#' in the URL
@@ -31,7 +152,8 @@
 					.then(res => res.json())
 					.then(response => {
 						const { username, discriminator, avatar, id } = response;
-						document.getElementById('user_avatar').src = 'https://cdn.discordapp.com/avatars/' + id + '/' + avatar + '.jpg';
+						document.getElementById('username_id').innerText += ` ${username}`;
+						document.getElementById('user_avatar').src = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpg`;
 						console.log(username);
 					})
 					.catch(console.error);
@@ -41,5 +163,7 @@
 			}
 		}
 	</script>
+	<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 </body>
 </html>
