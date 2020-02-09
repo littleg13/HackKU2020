@@ -11,7 +11,7 @@ if (isset($_GET['username']) && isset($_GET['avatar']) && isset($_GET['id'])) {
     $mysqlUsername = 'root';
     $mysqlPassword = 'password';
     $mysqlDB = 'mooxter';
-
+    session_start();
     $username = $_GET['username'];
     $avatar = $_GET['avatar'];
     $id = $_GET['id'];
@@ -23,6 +23,7 @@ if (isset($_GET['username']) && isset($_GET['avatar']) && isset($_GET['id'])) {
     }
 
     $uid = uniqid();
+    $_SESSION['UID'] = $uid;
     $sql = "SELECT discord_uid FROM users";
     $result = $conn->query($sql);
 
@@ -44,5 +45,5 @@ if (isset($_GET['username']) && isset($_GET['avatar']) && isset($_GET['id'])) {
 }
 
 $conn->close();
-header('Location: /OAuth2/indexReturn.html');
+header('Location: /OAuth2/indexReturn.php');
 ?>

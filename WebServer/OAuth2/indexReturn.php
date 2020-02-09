@@ -14,7 +14,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light shadow fixed-top">
     <div class="container">
-      <h4 class="navbar-brand" id="username_id">Welcome Back, </h4>
+      <h4 class="navbar-brand" id="username_id">Welcome Back</h4>
       <img class="test rounded-circle" id="user_avatar" src="download.jpeg">
     </div>
   </nav>
@@ -24,7 +24,22 @@
       <div class="row h-75 align-items-center">
         <div class="col-12 text-center">
           <h2 class="font-weight-light">Here's your XRP balance:</h2>
-          <p class="lead" id="balance">$$$</p>
+          <p class="lead" id="balance">
+            <?php
+              session_start();
+              $UID = $_SESSION['UID'];
+              $balanceURL = 'http://xpringapi/api/v1/getBalance?id=$UID';
+              $ch = curl_init();
+              // set url 
+              curl_setopt($ch, CURLOPT_URL, $balanceURL);
+              // $output contains the output json
+              $output = curl_exec($ch);
+              // close curl resource to free up system resources 
+              curl_close($ch);
+              // {"name":"Baron","gender":"male","probability":0.88,"count":26}
+              echo json_decode($output, true)['balance'];
+            ?>
+          </p>
         </div>
       </div>
     </div>
