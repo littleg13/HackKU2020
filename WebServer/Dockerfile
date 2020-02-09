@@ -4,7 +4,7 @@ EXPOSE 80
 
 RUN apt update -y
 RUN apt install nginx-full -y
-RUN apt install php php-fpm php-mysql -y
+RUN apt install php php-fpm php-mysql php-curl -y
 
 WORKDIR /var/www/html
 COPY . /var/www/html
