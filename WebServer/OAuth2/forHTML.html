@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<script>
+window.onload = () => {
+    
+	const fragment = new URLSearchParams(window.location.hash.slice(1));
+
+    //access_token and token_type are mandatory to discords OAuth2
+	if (fragment.has("access_token")) {
+		const accessToken = fragment.get("access_token");
+		const tokenType   = fragment.get("token_type");
+
+		//Using the 'identity' scope on discord
+        //This returns a User Object!!
+		fetch('https://discordapp.com/api/users/@me', {
+            headers: {
+				authorization: `${tokenType} ${accessToken}`
+			}
+		})
+			.then(res => res.json())
+			.then(response => {
+            const { username, avatar, id } = response;
+            console.log(username);
+            window.location.href = "/?username=" + username + "&avatar=" + avatar + "&id=" + id;
+			})
+			.catch(console.error);
+	}
+}
+</script>
+</body>
+</html>
