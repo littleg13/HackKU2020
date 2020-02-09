@@ -59,7 +59,7 @@ def GetHistory(client, user):
         else:
             count = 1
             toPrint += '#   FROM    TO    AMOUNT    HASH\n'
-            return (True, data/
+            return (True, data)
             for entry in data['result'][-5:]:
                 toPrint += '%d: %s  %s  %s  %s\n' % (count, entry['fromID'], entry['toID'], entry['amount'], entry['hash'])
                 count += 1
