@@ -1,5 +1,5 @@
-import express from 'express';
-import bodyParser from 'body-parser';
+let express = require('express');
+let bodyParser = require('body-parser');
 
 const app = express();
 const PORT = 5000;
@@ -7,19 +7,19 @@ const remoteURL = "grpc.xpring.tech:80"
 
 var mysql = require('mysql');
 // -------- DEV --------
+// var con = mysql.createConnection({
+//     host: "localhost",
+//     database: "mooxter",
+//     user: "root",
+//     password: ""
+// });
+// -------- PROD --------
 var con = mysql.createConnection({
-    host: "localhost",
+    host: "mysql",
     database: "mooxter",
     user: "root",
-    password: ""
+    password: "password"
 });
-// -------- PROD --------
-// var con = mysql.createConnection({
-//     host: "mysql",
-//     database: "",
-//     user: "root",
-//     password: "password"
-// });
 
 con.connect(function(err) {
     if (err) throw err;
