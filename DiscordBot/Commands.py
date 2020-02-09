@@ -2,7 +2,7 @@ from Command import Command, InvalidDiscordUser, InvalidMooxterUser
 from DiscordClient import DiscordClient
 import requests
 import mysql.connector
-API = 'http://xpringapi'
+API = 'http://xpringapi:5000'
 
 
 
@@ -50,7 +50,7 @@ def GetBalance(client, user):
 
 def GetHistory(client, user):
     UID = getUID(user)
-    response = requests.get(API + '/api/v1/tranactionHistory?', params={'id': UID})
+    response = requests.get(API + '/api/v1/tranactionHistory', params={'id': UID})
     data = response.json()
     toPrint = "'''Transaction History:\n"
     if(response.status_code == 200):
