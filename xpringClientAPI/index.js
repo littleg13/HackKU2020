@@ -142,7 +142,32 @@ app.get('/api/v1/balance/:id', (req, res) => {
 });
 
 app.get('/api/v1/transactionHistory/:id', (req, res) => {
+    let userID = req.params.id;
+    let query = `SELECT toID, fromID, amount, hash FROM transactions WHERE toID='${userID}' or fromID='${userID}'`;
 
+    try {
+        con.query(query, function (err, result) {
+            if (err) throw err;
+            result = result.map(v => Object.assign({}, v));
+            if (result.length == 0) {
+                return res.status(200).send({
+                    success: 'false',
+                    message: `No transactions found.`
+                });
+            } else {
+                return res.status(200).send({
+                    success: 'true',
+                    result
+                });
+            }
+        });
+    } catch (err) {
+        response = res.status(400).send({
+            success: 'false',
+            message: `Error when fetching transactions, error: ${err}`
+        });
+        return;
+    }
 });
 
 app.post('/api/v1/deleteWallet/:id', (req, res) => {
@@ -223,7 +248,7 @@ async function finishSending(res, req, amount, destWalletAdd, sendingWallet) {
     let query = `INSERT INTO transactions (toID, fromID, amount, hash) VALUES ('${req.body.dUID}', '${req.body.sUID}', '${amount}', '${transactionHash}')`;
 
     con.query(query, function (err, result) {
-        if (err) throw err;
+        if (err) console.log(err);
     });
 
     return res.status(200).send({
