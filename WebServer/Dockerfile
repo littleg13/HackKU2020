@@ -14,5 +14,6 @@ COPY ./default /etc/nginx/sites-enabled/
 
 # CMD ["source ~/.bashrc"]
 # CMD ["service", "nginx", "start"]
-CMD ["service", "php7.3-fpm", "start"]
-CMD ["nginx", "-g", "daemon off;"]
+# CMD ["service", "php7.3-fpm", "start"]
+# CMD ["nginx", "-g", "daemon off;"]
+CMD service php7.3-fpm start && nginx -g "daemon off;"
