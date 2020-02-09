@@ -38,7 +38,7 @@ def Send(client, user, destination, amount):
 
 def GetBalance(client, user):
     UID = getUID(user)
-    response = requests.get(API + '/api/v1/getBalance', params={'id': UID})
+    response = requests.get(API + '/api/v1/getBalance/' + UID)
     data = response.text
     if(response.status_code == 200):
         return (True, 'Balance: %s' % (data))
@@ -50,7 +50,7 @@ def GetBalance(client, user):
 
 def GetHistory(client, user):
     UID = getUID(user)
-    response = requests.get(API + '/api/v1/tranactionHistory', params={'id': UID})
+    response = requests.get(API + '/api/v1/tranactionHistory' + UID)
     data = response.text
     toPrint = "'''Transaction History:\n"
     if(response.status_code == 200):
