@@ -7,7 +7,8 @@ API = 'xpringapi'
 database = mysql.connector.connect(
     host="mysql",
     user="root",
-    passwd="password"
+    passwd="password",
+    database="mooxter"
 )
 cursor = database.cursor()
 
