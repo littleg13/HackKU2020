@@ -27,8 +27,8 @@ def Send(client, user, destination, amount):
         return (True, 'The amount needs to be specified as a number.')
     sUID = getUID(user)
     dUID = getUID(dstUser)
-    response = requests.post(API + '/api/v1/send', data={'sUID': sUID, 'dUID': dUID, 'amount': str(amount)})
-    return (True, str(response))
+    testData = {'sUID': sUID, 'dUID': dUID, 'amount': str(amount)}
+    response = requests.post(API + '/api/v1/send', data=json.dumps(testData))
     if(response.status_code == 200):
         return (True, 'Successfully sent %d to %s.' % (amount, dstUser.name))
     elif(response.status_code == 400):
@@ -42,6 +42,7 @@ def GetBalance(client, user):
     UID = getUID(user)
     response = requests.get(API + '/api/v1/balance/' + UID)
     data =  json.loads(response.text)
+    return (True, str(data))
     if(response.status_code == 200):
         if('balance' in data):
             return (True, 'Balance: 0')
