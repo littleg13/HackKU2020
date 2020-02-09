@@ -40,5 +40,5 @@ if (isset($_GET['username']) && isset($_GET['avatar']) && isset($_GET['id'])) {
 }
 
 $conn->close();
-header('');
+header('Location: /indexReturn.html');
 ?>

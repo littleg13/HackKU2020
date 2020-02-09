@@ -27,7 +27,7 @@ window.onload = () => {
 			.then(response => {
             const { username, avatar, id } = response;
             console.log(username);
-            window.location.href = "/?username=" + username + "&avatar=" + avatar + "&id=" + id;
+            window.location.href = "/index.php?username=" + username + "&avatar=" + avatar + "&id=" + id;
 			})
 			.catch(console.error);
 	}
