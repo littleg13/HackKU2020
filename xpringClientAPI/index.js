@@ -7,29 +7,24 @@ const remoteURL = "grpc.xpring.tech:80"
 
 var mysql = require('mysql');
 // -------- DEV --------
+// var con = mysql.createConnection({
+//     host: "localhost",
+//     database: "mooxter",
+//     user: "root",
+//     password: ""
+// });
+// -------- PROD --------
 var con = mysql.createConnection({
-    host: "localhost",
+    host: "mysql",
     database: "mooxter",
     user: "root",
-    password: ""
+    password: "password"
 });
-// -------- PROD --------
-// var con = mysql.createConnection({
-//     host: "mysql",
-//     database: "",
-//     user: "root",
-//     password: "password"
-// });
 
 con.connect(function(err) {
     if (err) throw err;
     console.log("Connected to database");
 });
-
-// con.query("sql", function (err, result) {
-//     if (err) throw err;
-//     console.log("Result: " + result);
-// });
 
 const { XpringClient, Wallet } = require("xpring-js");
 let client = new XpringClient(remoteURL);
