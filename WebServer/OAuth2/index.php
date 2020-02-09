@@ -23,9 +23,13 @@ if (isset($_GET['username']) && isset($_GET['avatar']) && isset($_GET['id'])) {
     }
 
     $uid = uniqid();
-    $query = "INSERT INTO users (discord_uid, uid, username, avatar) VALUES ('$id', '$uid', '$username', '$avatar')";
+    $sql = "SELECT discord_uid FROM users";
+    $result = $conn->query($sql);
 
-    mysqli_query($conn, $query) or die(mysqli_error($conn));
+    if($result->num_rows < 1) {
+        $query = "INSERT INTO users (discord_uid, uid, username, avatar) VALUES ('$id', '$uid', '$username', '$avatar')";
+        mysqli_query($conn, $query) or die(mysqli_error($conn));
+    }
 
     // if ($conn->query($query) === TRUE) {
     //     echo "Added user to database.";
