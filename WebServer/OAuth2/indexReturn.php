@@ -26,6 +26,9 @@
           <h2 class="font-weight-light">Here's your XRP balance:</h2>
           <p class="lead" id="balance">
             <?php
+              ini_set('display_errors', 1);
+              ini_set('display_startup_errors', 1);
+              error_reporting(E_ALL);
               session_start();
               $UID = $_SESSION['UID'];
               $balanceURL = 'http://xpringapi/api/v1/getBalance?id=$UID';
