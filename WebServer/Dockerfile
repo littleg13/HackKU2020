@@ -1,15 +1,18 @@
 FROM nginx
 
-WORKDIR /usr/share/nginx/html
-
-COPY . /usr/share/nginx/html
-RUN rm /usr/nginx/conf.d/default.conf
-COPY default.conf /usr/nginx/conf.d/
-
 EXPOSE 80
 
 RUN apt update -y
-RUN apt install php-fpm php-mysql
-RUN echo 'service nginx start' >> ~/.bashrc
+RUN apt install nginx-full -y
+RUN apt install php php-fpm php-mysql -y
 
-CMD ["source ~/.bashrc"]
+WORKDIR /var/www/html
+COPY . /var/www/html
+RUN rm /etc/nginx/sites-enabled/default
+COPY ./default /etc/nginx/sites-enabled/
+# RUN echo 'service nginx start' >> ~/.bashrc
+
+# CMD ["source ~/.bashrc"]
+# CMD ["service", "nginx", "start"]
+CMD ["nginx", "-g", "daemon off;"]
+CMD ["service", "php7.3-fpm", "start"]
