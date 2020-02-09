@@ -33,6 +33,14 @@ if (isset($_GET['username']) && isset($_GET['avatar']) && isset($_GET['id'])) {
     if($result->num_rows < 1) {
         $query = "INSERT INTO users (discord_uid, uid, username, avatar) VALUES ('$id', '$uid', '$username', '$avatar')";
         mysqli_query($conn, $query) or die(mysqli_error($conn));
+        $balanceURL = "http://xpringapi/api/v1/newWallet/$UID";
+        $ch = curl_init();
+        // set url 
+        curl_setopt($ch, CURLOPT_URL, $balanceURL);
+        // $output contains the output json
+        $output = curl_exec($ch);
+        // close curl resource to free up system resources 
+        curl_close($ch);
     }
 
     // if ($conn->query($query) === TRUE) {
